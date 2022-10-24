@@ -1,5 +1,6 @@
 import random
 
+
 colors = ['♠', '♣', '♦', '♥']
 
 signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
@@ -42,3 +43,17 @@ class Card:
         return self.value != other.value
 
 
+class Player:
+
+    def __init__(self, name="default"):
+        self.name = name
+        self.hand = []
+
+    def add_to_hand(self, card: Card):
+        self.hand.append(card)
+
+    def remove_from_hand(self, card: Card):
+        self.hand.pop(card)
+
+    def play(self, card: Card):
+        pass
