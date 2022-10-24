@@ -13,7 +13,6 @@ class Deck:
                 card = Card(i, j)
                 self.cards.append(card)
 
-
     def shuffle(self):
         random.shuffle(self.cards)
 
