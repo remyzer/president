@@ -1,10 +1,21 @@
-colors = ['heart', 'diamonds', 'spades', 'clubs']
+import random
+
+colors = ['♠', '♣', '♦', '♥']
 
 signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
 
 
 class Deck:
-    pass
+    def __init__(self):
+        self.cards = []
+        for i in signs:
+            for j in colors:
+                card = Card(i, j)
+                self.cards.append(card)
+
+
+    def shuffle(self):
+        random.shuffle(self.cards)
 
 
 class Card:
