@@ -43,6 +43,28 @@ class Card:
         return self.value != other.value
 
 
+class PresidentGame:
+    def __init__(self):
+        messi = Player('Messi')
+        neymar = Player('Neymar')
+        mbappe = Player('Mbappe')
+        self.players = [messi, neymar, mbappe]
+        self.distribute_cards()
+
+    def distribute_cards(self):
+        deck = Deck()
+        deck.shuffle()
+        next_player = 0
+        for i in deck.cards:
+            self.players[next_player].add_to_hand(i)
+            if next_player == len(self.players)-1:
+                next_player = 0
+            else:
+                next_player += 1
+
+
+
+
 class Player:
 
     def __init__(self, name="default"):
