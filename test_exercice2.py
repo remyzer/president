@@ -20,7 +20,6 @@ class TestCardsExercice2(unittest.TestCase):
         game = models.PresidentGame()
         player_1 = game.players[0]
         player_2 = game.players[1]
-        print(player_1.hand)
         self.assertTrue(len(player_1.hand) > 0)
         self.assertTrue(len(player_1.hand) >= len(player_2.hand))
 

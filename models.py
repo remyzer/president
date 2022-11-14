@@ -59,11 +59,9 @@ class Card:
 
 
 class PresidentGame:
-    def __init__(self):
-        messi = Player('Messi')
-        neymar = Player('Neymar')
-        mbappe = Player('Mbappe')
-        self.players = [messi, neymar, mbappe]
+    #TODO nommage aleatoire des joueurs + nombre de joueur
+    def __init__(self, players):
+        self.players = players
         self.distribute_cards()
 
     def distribute_cards(self):
@@ -96,6 +94,7 @@ class Player:
     def remove_from_hand(self, card: Card):
         self.hand.pop(card)
 
+    #TODO fonction de tri de maim
     def sort_hand_by_value(self):
         self.hand = sorted(self.hand)
 
@@ -115,3 +114,11 @@ class Player:
             cards_played.append(self.hand[index])
             self.remove_from_hand(self.hand[index])
         return cards_played
+
+
+
+class Round:
+    def __init__(self, nb_card_to_play, next_player):
+        self.nb_card_ti_play = nb_card_to_play
+        self.next_player = next_player
+        self.trick: Card = []
