@@ -8,4 +8,8 @@ for i in range(nb_player):
     players.append(Player(name_player))
 game = PresidentGame(players)
 
+next_player = game.find_heart_queen_in_player_hand(players)
+next_player.display_hand()
+
+
 

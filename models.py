@@ -110,6 +110,9 @@ class Player:
 
 class Round:
     def __init__(self, nb_card_to_play, next_player):
-        self.nb_card_ti_play = nb_card_to_play
+        self.nb_card_to_play = nb_card_to_play
         self.next_player = next_player
         self.trick: Card = []
+        self.play()
+
+    def play(self):
