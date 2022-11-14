@@ -77,12 +77,18 @@ class PresidentGame:
             else:
                 next_player += 1
 
+    def find_heart_queen_in_player_hand(self, players):
+        for player in players:
+            for card in player.hand:
+                if card.sign == 'Q' and card.color == '♥':
+                    return player
 
 class Player:
 
     def __init__(self, name="default"):
         self.name = name
         self.hand = []
+        self.role = ''
 
     def add_to_hand(self, card: Card):
         self.hand.append(card)
@@ -90,5 +96,13 @@ class Player:
     def remove_from_hand(self, card: Card):
         self.hand.pop(card)
 
-    def play(self, card: Card):
-        pass
+    def sort_hand_by_value(self):
+        self.hand = sorted(self.hand)
+
+    def play(self, hand_index):
+        cards_played = []
+        #TODO Methode pour tester si les paires et plus ont des valeurs identiques
+        for index in hand_index:
+            cards_played.append(self.hand[index])
+            self.remove_from_hand(self.hand[index])
+        return cards_played
