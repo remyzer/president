@@ -63,7 +63,9 @@ class PresidentGame:
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
-
+    """
+    Distribue équitablement les cartes entre tous les joueurs
+    """
     def distribute_cards(self):
         deck = Deck()
         deck.shuffle()
@@ -74,7 +76,10 @@ class PresidentGame:
                 next_player = 0
             else:
                 next_player += 1
-
+    """
+    Trouve le joueur avec la dame de coeur dans sa main
+    :parameter List of Players: players
+    """
     def find_heart_queen_in_player_hand(self, players):
         for player in players:
             for card in player.hand:
@@ -84,37 +89,65 @@ class PresidentGame:
 class Player:
 
     def __init__(self, name="default"):
+        """
+        Constructeur de la classe Player
+        :param name:
+        """
         self.name = name
         self.hand = []
         self.role = ''
 
     def add_to_hand(self, card: Card):
+        """
+        Ajoute une carte à la main du joueur
+        :param card: carte à ajouter
+        """
         self.hand.append(card)
 
     def remove_from_hand(self, card: Card):
+        """
+         Retire la carte de la main du joueur
+        :param card:  carte à retirer
+        """
         self.hand.pop(card)
 
-    #TODO fonction de tri de maim
     def sort_hand_by_value(self):
+        """
+        Trie les cartes du joueur de la plus faible à la plus forte
+        """
         self.hand = sorted(self.hand)
-
-    def check_if_multiple_cards_are_equals(self, cards):
-        pass
-
+    @staticmethod
+    def check_if_multiple_cards_are_equals(cards):
+        """
+        Vérifie si les cartes jouées en même temps sont bien les mêmes
+        :param cards: List of Cards
+        """
+        previous_card = cards[0].value
+        for card in cards:
+            if card.value != previous_card.value:
+                raise CardsNotEqual("Les cartes jouées ne sont pas égales")
     def display_hand(self):
+        """
+        Affiche dans la console la main du joueur
+        :return:
+        """
         hand_string = ""
         for card in self.hand:
-            hand_string += f"{card.sign} {card.color}|"
+            hand_string += f"{card.sign}{card.color}|"
         print(hand_string)
 
     def play(self, hand_index):
+        """
+        Retire de la main du joueur les cartes jouées
+        :param hand_index:
+        :return: retourne les cartes jouées
+        """
         cards_played = []
-        # TODO Methode pour tester si les paires et plus ont des valeurs identiques
         for index in hand_index:
             cards_played.append(self.hand[index])
             self.remove_from_hand(self.hand[index])
+        self.check_if_multiple_cards_are_equals(cards_played)
         return cards_played
-
 
 
 class Round:
@@ -125,3 +158,6 @@ class Round:
         self.play()
 
     def play(self):
+
+class CardsNotEqual(Exception):
+    pass
