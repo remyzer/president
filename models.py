@@ -7,7 +7,11 @@ signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
 
 
 class Deck:
+
     def __init__(self):
+        """
+           Initialise le Deck en créant les 52 cartes
+        """
         self.cards = []
         for i in signs:
             for j in colors:
@@ -15,11 +19,19 @@ class Deck:
                 self.cards.append(card)
 
     def shuffle(self):
+        """
+            Mélange le deck
+        """
         random.shuffle(self.cards)
 
 
 class Card:
     def __init__(self, sign, color):
+        """
+        Constructeur d'une carte
+        :param sign:
+        :param color:
+        """
         self.sign = sign
         self.color = color
         self.value = signs.index(sign)
@@ -42,6 +54,9 @@ class Card:
     def __ne__(self, other):
         return self.value != other.value
 
+    def __str__(self):
+        return "[{x},{y}]".format(x=self.sign, y=self.color)
+
 
 class PresidentGame:
     def __init__(self):
@@ -61,8 +76,6 @@ class PresidentGame:
                 next_player = 0
             else:
                 next_player += 1
-
-
 
 
 class Player:
