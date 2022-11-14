@@ -99,9 +99,18 @@ class Player:
     def sort_hand_by_value(self):
         self.hand = sorted(self.hand)
 
+    def check_if_multiple_cards_are_equals(self, cards):
+        pass
+
+    def display_hand(self):
+        hand_string = ""
+        for card in self.hand:
+            hand_string += f"{card.sign} {card.color}|"
+        print(hand_string)
+
     def play(self, hand_index):
         cards_played = []
-        #TODO Methode pour tester si les paires et plus ont des valeurs identiques
+        # TODO Methode pour tester si les paires et plus ont des valeurs identiques
         for index in hand_index:
             cards_played.append(self.hand[index])
             self.remove_from_hand(self.hand[index])
