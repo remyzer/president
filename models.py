@@ -1,6 +1,5 @@
 import random
 
-
 colors = ['♠', '♣', '♦', '♥']
 
 signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
@@ -59,27 +58,31 @@ class Card:
 
 
 class PresidentGame:
-    #TODO nommage aleatoire des joueurs + nombre de joueur
+    # TODO nommage aleatoire des joueurs + nombre de joueur
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
+
     """
     Distribue équitablement les cartes entre tous les joueurs
     """
+
     def distribute_cards(self):
         deck = Deck()
         deck.shuffle()
         next_player = 0
         for i in deck.cards:
             self.players[next_player].add_to_hand(i)
-            if next_player == len(self.players)-1:
+            if next_player == len(self.players) - 1:
                 next_player = 0
             else:
                 next_player += 1
+
     """
     Trouve le joueur avec la dame de coeur dans sa main
     :parameter List of Players: players
     """
+
     def find_heart_queen_in_player_hand(self, players):
         for player in players:
             for card in player.hand:
@@ -119,6 +122,7 @@ class Player:
         Trie les cartes du joueur de la plus faible à la plus forte
         """
         self.hand = sorted(self.hand)
+
     @staticmethod
     def check_if_multiple_cards_are_equals(cards):
         """
@@ -129,6 +133,7 @@ class Player:
         for card in cards:
             if card.value != previous_card.value:
                 raise CardsNotEqual("Les cartes jouées ne sont pas égales")
+
     def display_hand(self):
         """
         Affiche dans la console la main du joueur
@@ -156,59 +161,103 @@ class Player:
 class Round:
     def __init__(self, next_player, players):
         self.players = players
-        self.nb_card_to_play = 0 #FIXME a modifier
+        self.nb_card_to_play = 0  # FIXME a modifier
         self.next_player = next_player
         self.trick = []
         self.last_cards_played = []
-        while True :
+        while True:
             if self.next_player.type() == AIPlayer:
                 self.next_player.play(self.last_cards_played)
             else:
                 self.next_player.play()
 
 
-
 class AIPlayer(Player):
-
     def play(self, last_cards_play):
         """
         Joue la ou les premiere(s) carte(s) que l'AI peut jouer
         :param last_cards_play: dernières cartes jouées
-        :return:
+        :return: liste de carte à jouer liste vide s'il passe ou ne peut pas jouer
         """
-        cards_played = []
-        i = 0
-        if last_cards_play is not None:
-            while last_cards_play[0].value > self.hand[i].value:
-                i+=1
-        cards_played.append(self.hand[i])
-        self.hand.pop(i)
-        while self.hand[i].value == cards_played[i].value:
-            cards_played.append(self.hand[i])
-            self.hand.pop(i)
-        return cards_played
+        number_of_card_to_play = len(last_cards_play)
+        match number_of_card_to_play:
+            case 0:
+                if len(self.hand) == 0:
+                    return []
+                else:
+                    return [self.hand[0]]
+            case 1:
+                if len(self.hand) == 0:
+                    return []
+                else:
+                    for card in self.hand:
+                        if card >= last_cards_play[0]:
+                            return [card]
+            case 2:
+                return self.first_pair_playable(last_cards_play)
+            case 3:
+                return self.first_triple_playable(last_cards_play)
+            case 4:
+                return self.first_four_playable(last_cards_play)
 
-    #TODO fonction pour redoonner la premiere combinaison jouable
-    def first_combination_playable(self, last_cards_play):
+    def first_pair_playable(self, last_cards_play):
         """
-        Choisi la plus faible combinaison de cartes jouable
-        :param last_cards_play: dernières cartes jouées
-        :return: liste de cartes
+        choisi la plus faible pair à jouer
+        :param last_cards_play: liste de deux cartes
+        :return: liste de deux cartes ou liste vide si jamais il n'y a pas de pair jouable
         """
-        cards_to_play = last_cards_play.length()
-        if 0 == self.hand.length():
-            return []
-        elif cards_to_play == 0 :
-            result = [self.hand[0]]
-            self.remove_from_hand(self.hand[0])
-            return result
-        else:
-            result = []
-            index = 0
-            while True:
+        index = 0
+        card_to_play = []
+        while index + 1 < len(self.hand):
+            if self.hand[index] == self.hand[index + 1] and self.hand[index] >= last_cards_play[0]:
+                card_to_play.append(self.hand[index])
+                card_to_play.append(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index])
+                self.remove_from_hand(self.hand[index + 1])
+                return card_to_play
+            index += 1
+        return card_to_play
 
-            for card in self.hand:
-                if card > last_cards_play[0] and :
+    def first_triple_playable(self, last_cards_play):
+        """
+        choisi le triple le plus faible à jouer
+        :param last_cards_play: liste de trois cartes
+        :return: liste de trois cartes ou liste vide si jamais il n'y a pas de triple jouable
+        """
+        index = 0
+        card_to_play = []
+        while index + 2 < len(self.hand):
+            if self.hand[index] == self.hand[index + 1] == self.hand[index + 2] \
+                    and self.hand[index] > last_cards_play[0]:
+                card_to_play.append(self.hand[index])
+                card_to_play.append(self.hand[index + 1])
+                card_to_play.append(self.hand[index + 2])
+                self.remove_from_hand(self.hand[index])
+                self.remove_from_hand(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index + 2])
+                return card_to_play
+            index += 1
+        return card_to_play
 
-
-
+    def first_four_playable(self, last_cards_play):
+        """
+        choisi le carré le plus faible à jouer
+        :param last_cards_play: liste de quatres cartes
+        :return: liste de quatre cartes ou liste vide si jamais il n'y a pas de carré jouable
+        """
+        index = 0
+        card_to_play = []
+        while index + 3 < len(self.hand):
+            if self.hand[index] == self.hand[index + 1] == self.hand[index + 2] == self.hand[index + 3] \
+                    and self.hand[index] > last_cards_play[0]:
+                card_to_play.append(self.hand[index])
+                card_to_play.append(self.hand[index + 1])
+                card_to_play.append(self.hand[index + 2])
+                card_to_play.append(self.hand[index + 3])
+                self.remove_from_hand(self.hand[index])
+                self.remove_from_hand(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index + 2])
+                self.remove_from_hand(self.hand[index + 3])
+                return card_to_play
+            index += 1
+        return card_to_play
