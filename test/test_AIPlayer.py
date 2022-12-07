@@ -15,8 +15,19 @@ class TestAIPlayer(unittest.TestCase):
         last_cards_play = [c1, c2]
         player.hand = [c3, c4, c5, c6, c7]
         resultat_attendu = [c5, c6]
-        for i in player.play(last_cards_play):
-            print(i)
-        for i in resultat_attendu:
-            print(i)
+        self.assertEqual(player.play(last_cards_play), resultat_attendu)
+
+    def test_AIPlayer_play_2(self):
+        player = AIPlayer()
+        c1 = Card('3', '♥')
+        c2 = Card('3', '♦')
+        c3 = Card('3', '♣')
+        c4 = Card('4', '♥')
+        c5 = Card('5', '♥')
+        c6 = Card('5', '♠')
+        c7 = Card('7', '♥')
+        c8 = Card('5', '♣')
+        last_cards_play = [c1, c2, c3]
+        player.hand = [c4, c5, c6, c8, c7]
+        resultat_attendu = [c5, c6, c8]
         self.assertEqual(player.play(last_cards_play), resultat_attendu)

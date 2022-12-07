@@ -62,6 +62,7 @@ class PresidentGame:
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
+        next_player = self.find_heart_queen_in_player_hand(self.players)
 
     """
     Distribue équitablement les cartes entre tous les joueurs
@@ -212,8 +213,8 @@ class AIPlayer(Player):
             if self.hand[index] == self.hand[index + 1] and self.hand[index] >= last_cards_play[0]:
                 card_to_play.append(self.hand[index])
                 card_to_play.append(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index + 1]) #on remove les cartes en ordre décroissant pour éviter les probleme d'index.
                 self.remove_from_hand(self.hand[index])
-                self.remove_from_hand(self.hand[index + 1])
                 return card_to_play
             index += 1
         return card_to_play
@@ -232,9 +233,9 @@ class AIPlayer(Player):
                 card_to_play.append(self.hand[index])
                 card_to_play.append(self.hand[index + 1])
                 card_to_play.append(self.hand[index + 2])
-                self.remove_from_hand(self.hand[index])
+                self.remove_from_hand(self.hand[index + 2]) #on remove les cartes en ordre décroissant pour éviter les probleme d'index.
                 self.remove_from_hand(self.hand[index + 1])
-                self.remove_from_hand(self.hand[index + 2])
+                self.remove_from_hand(self.hand[index])
                 return card_to_play
             index += 1
         return card_to_play
@@ -254,10 +255,10 @@ class AIPlayer(Player):
                 card_to_play.append(self.hand[index + 1])
                 card_to_play.append(self.hand[index + 2])
                 card_to_play.append(self.hand[index + 3])
-                self.remove_from_hand(self.hand[index])
-                self.remove_from_hand(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index + 3])  # on remove les cartes en ordre décroissant pour éviter les probleme d'index.
                 self.remove_from_hand(self.hand[index + 2])
-                self.remove_from_hand(self.hand[index + 3])
+                self.remove_from_hand(self.hand[index + 1])
+                self.remove_from_hand(self.hand[index])
                 return card_to_play
             index += 1
         return card_to_play
