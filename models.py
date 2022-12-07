@@ -81,6 +81,7 @@ class PresidentGame:
                 if card.sign == 'Q' and card.color == '♥':
                     return player
 
+
 class Player:
 
     def __init__(self, name="default"):
@@ -92,9 +93,9 @@ class Player:
         self.hand.append(card)
 
     def remove_from_hand(self, card: Card):
-        self.hand.pop(card)
+        index = self.hand.index(card)
+        self.hand.pop(index)
 
-    #TODO fonction de tri de maim
     def sort_hand_by_value(self):
         self.hand = sorted(self.hand)
 
@@ -116,12 +117,61 @@ class Player:
         return cards_played
 
 
-
 class Round:
-    def __init__(self, nb_card_to_play, next_player):
-        self.nb_card_to_play = nb_card_to_play
+    def __init__(self, next_player, players):
+        self.players = players
+        self.nb_card_to_play = 0 #FIXME a modifier
         self.next_player = next_player
-        self.trick: Card = []
-        self.play()
+        self.trick = []
+        self.last_cards_played = []
+        while True :
+            if self.next_player.type() == AIPlayer:
+                self.next_player.play(self.last_cards_played)
+            else:
+                self.next_player.play()
 
-    def play(self):
+
+
+class AIPlayer(Player):
+
+    def play(self, last_cards_play):
+        """
+        Joue la ou les premiere(s) carte(s) que l'AI peut jouer
+        :param last_cards_play: dernières cartes jouées
+        :return:
+        """
+        cards_played = []
+        i = 0
+        if last_cards_play is not None:
+            while last_cards_play[0].value > self.hand[i].value:
+                i+=1
+        cards_played.append(self.hand[i])
+        self.hand.pop(i)
+        while self.hand[i].value == cards_played[i].value:
+            cards_played.append(self.hand[i])
+            self.hand.pop(i)
+        return cards_played
+
+    #TODO fonction pour redoonner la premiere combinaison jouable
+    def first_combination_playable(self, last_cards_play):
+        """
+        Choisi la plus faible combinaison de cartes jouable
+        :param last_cards_play: dernières cartes jouées
+        :return: liste de cartes
+        """
+        cards_to_play = last_cards_play.length()
+        if 0 == self.hand.length():
+            return []
+        elif cards_to_play == 0 :
+            result = [self.hand[0]]
+            self.remove_from_hand(self.hand[0])
+            return result
+        else:
+            result = []
+            index = 0
+            while True:
+
+            for card in self.hand:
+                if card > last_cards_play[0] and :
+
+
