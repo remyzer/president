@@ -1,5 +1,6 @@
 import random
 
+
 colors = ['♠', '♣', '♦', '♥']
 
 signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
@@ -58,15 +59,13 @@ class Card:
 
 
 class PresidentGame:
-    # TODO nommage aleatoire des joueurs + nombre de joueur
+    #TODO nommage aleatoire des joueurs + nombre de joueur
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
-
     """
     Distribue équitablement les cartes entre tous les joueurs
     """
-
     def distribute_cards(self):
         deck = Deck()
         deck.shuffle()
@@ -159,20 +158,32 @@ class Player:
 
 
 class Round:
-    def __init__(self, next_player, players):
+    def __init__(self, current_player, players):
         self.players = players
-        self.nb_card_to_play = 0  # FIXME a modifier
-        self.next_player = next_player
-        self.trick = []
+        self.nb_card_to_play = 0 #FIXME a modifier
+        self.current_player_index = 0
+        self.current_player = current_player
+        self.cards_played = []
         self.last_cards_played = []
-        while True:
-            if self.next_player.type() == AIPlayer:
-                self.next_player.play(self.last_cards_played)
-            else:
-                self.next_player.play()
 
+    def next(self, cards_played):
+        self.last_cards_played = []
+        for card in cards_played:
+            self.cards_played.append(card)
+            self.last_cards_played.append(card)
+
+        self.find_next_player()
+
+    def find_next_player(self):
+        if self.current_player_index == len(self.players-1):
+            self.current_player_index = 0
+        else:
+            self.current_player_index += 1
+
+        self.current_player = self.players[self.current_player_index]
 
 class AIPlayer(Player):
+
     def play(self, last_cards_play):
         """
         Joue la ou les premiere(s) carte(s) que l'AI peut jouer
@@ -261,3 +272,7 @@ class AIPlayer(Player):
                 return card_to_play
             index += 1
         return card_to_play
+
+
+class CardsNotEqual(Exception):
+    pass
