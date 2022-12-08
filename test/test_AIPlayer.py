@@ -1,5 +1,7 @@
 import unittest
-from models import *
+
+from AIPlayer import AIPlayer
+from card import Card
 
 
 class TestAIPlayer(unittest.TestCase):

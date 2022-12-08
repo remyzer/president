@@ -1,5 +1,7 @@
-from models import *
 import names
+from AIPlayer import AIPlayer
+from president import PresidentGame
+from player import Player
 
 print("lancement Président")
 nb_player = int(input('Entrez un nombre de joueurs: '))

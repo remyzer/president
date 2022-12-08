@@ -1,5 +1,8 @@
 import unittest
-from models import *
+
+from card import Card
+from deck import Deck
+
 
 class TestCardsExercice1(unittest.TestCase):
     def test_card_constructor(self):
