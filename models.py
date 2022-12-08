@@ -1,5 +1,7 @@
+"""
+Ce module contient toutes les classes relatives au jeu du président
+"""
 import random
-
 
 colors = ['♠', '♣', '♦', '♥']
 
@@ -7,10 +9,12 @@ signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
 
 
 class Deck:
-
+    """
+    Cette classe gère la distribution et le mélange du deck.
+    """
     def __init__(self):
         """
-           Initialise le Deck en créant les 52 cartes
+        Initialise le Deck en créant les 52 cartes.
         """
         self.cards = []
         for i in signs:
@@ -20,12 +24,15 @@ class Deck:
 
     def shuffle(self):
         """
-            Mélange le deck
+        Mélange le deck.
         """
         random.shuffle(self.cards)
 
 
 class Card:
+    """
+    Cette classe permet la création et la comparaison de cartes uniquement par la valeur.
+    """
     def __init__(self, sign, color):
         """
         Constructeur d'une carte
@@ -59,6 +66,9 @@ class Card:
 
 
 class PresidentGame:
+    """
+    Cette classe s'occupe de gérer la partie
+    """
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
@@ -67,11 +77,19 @@ class PresidentGame:
             player.sort_hand_by_value()
 
     def start(self):
+        """
+        Cette méthode marque le début d'une partie.
+        Elle s'arrête lorsqu'il ne reste plus qu'un joueur avec des cartes
+        """
         while self.number_of_player_with_empty_hand() < len(self.players)-1:
             next_round = Round(self.next_player, self.players)
             self.next_player = next_round.start()
 
     def number_of_player_with_empty_hand(self):
+        """
+        Recherche le nombre de joueurs qui ont gagné
+        :return: Le nombre de joueurs qui ont gagné
+        """
         number_of_player_with_empty_hand = 0
         for player in self.players:
             if len(player.hand) == 0:
@@ -92,19 +110,25 @@ class PresidentGame:
             else:
                 next_player += 1
 
-    def find_heart_queen_in_player_hand(self, players):
+    @staticmethod
+    def find_heart_queen_in_player_hand(players):
         """
         Trouve le joueur avec la dame de coeur dans sa main
         :parameter players: List of Players
+        :return: Le joueur possédant la dame de coeur
         """
+        player_with_heart_queen = None
         for player in players:
             for card in player.hand:
                 if card.sign == 'Q' and card.color == '♥':
-                    return player
+                    player_with_heart_queen = player
+        return player_with_heart_queen
 
 
 class Player:
-
+    """
+    Cette classe permet la gestion de la main ,et des tours de jeu des différents joueurs
+    """
     def __init__(self, name="default"):
         """
         Constructeur de la classe Player
@@ -175,12 +199,18 @@ class Player:
 
 
 class Round:
+    """
+    Cette classe est utilisée pour la gestion des plis
+    """
     def __init__(self, next_player, players):
         self.players = players
         self.next_player = next_player
         self.last_cards_played = []
 
     def start(self):
+        """
+        :return:
+        """
         number_of_players_to_pass = 0
         while number_of_players_to_pass <= len(self.players):
             cards_play = self.next_player.play(self.last_cards_played)
@@ -195,13 +225,18 @@ class Round:
         return self.next_player
 
     def find_next_player(self):
+        """
+        :return: Retourne le prochain joueur qui doit jouer
+        """
         if self.players.index(self.next_player) == len(self.players) - 1:
             return self.players[0]
         return self.players[self.players.index(self.next_player)+1]
 
 
 class AIPlayer(Player):
-
+    """
+    Cette classe sert à la gestion des joueurs IA, c'est une classe fille de 'Player'
+    """
     def play(self, last_cards_play):
         """
         Joue la ou les premiere(s) carte(s) que l'AI peut jouer
@@ -312,4 +347,6 @@ class AIPlayer(Player):
 
 
 class CardsNotEqual(Exception):
-    pass
+    """
+    Classe fille de 'Exception', utilisée lors que plusieurs cartes jouées ne sont pas égales
+    """
