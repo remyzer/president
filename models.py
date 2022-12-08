@@ -178,27 +178,37 @@ class Player:
         :return: retourne les cartes jouées
         """
         cards_to_played = []
-        last_trick = ""
-        for card in last_cards_play:
-            last_trick += f"[{card.sign},{card.color}]"
-        print("Dernière cartes jouées : " + last_trick)
+        self.display_last_cards_play(last_cards_play)
         self.display_hand()
         if len(last_cards_play) == 0:
             number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
         else:
             number_of_cards_to_play = len(last_cards_play)
         for _ in range(number_of_cards_to_play):
-            card_to_play = int(input("Quelle carte voulez vous jouer?(index du tableau -1 pour passer)"))
+            card_to_play = \
+                int(input("Quelle carte voulez vous jouer?(index du tableau -1 pour passer)"))
             if card_to_play == -1:
                 return []
             cards_to_played.append(self.hand[card_to_play])
-        if cards_to_played.count(cards_to_played[0]) == len(cards_to_played): #On vérifie que tous les élément de la liste sont de même valeur
-            if len(last_cards_play) == 0 or cards_to_played[0] >= last_cards_play[0]: #On vérifie que les cartes sélectionner à jouer sont valable en fonction de ce qui a été joué avant
+        # On vérifie que tous les élément de la liste sont de même valeur
+        if cards_to_played.count(cards_to_played[0]) == len(cards_to_played):
+            # On vérifie que les cartes sélectionner à jouer sont valable
+            # en fonction de ce qui a été joué avant
+            if len(last_cards_play) == 0 or cards_to_played[0] >= last_cards_play[0]:
                 for card in cards_to_played:
                     self.remove_from_hand(card)
                 return cards_to_played
         return []
 
+    def display_last_cards_play (self, last_cards_play):
+        """
+        Affiche la liste des dernières cartes jouées
+        :param last_cards_play: liste des cartes jouées
+        """
+        last_trick = ""
+        for card in last_cards_play:
+            last_trick += f"[{card.sign},{card.color}]"
+        print("Dernière cartes jouées : " + last_trick)
 
 class Round:
     """
@@ -293,7 +303,8 @@ class AIPlayer(Player):
             if self.hand[index] == self.hand[index + 1] and self.hand[index] >= last_cards_play[0]:
                 card_to_play.append(self.hand[index])
                 card_to_play.append(self.hand[index + 1])
-                self.remove_from_hand(self.hand[index + 1]) #on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                # on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                self.remove_from_hand(self.hand[index + 1])
                 self.remove_from_hand(self.hand[index])
                 return card_to_play
             index += 1
@@ -315,7 +326,8 @@ class AIPlayer(Player):
                 card_to_play.append(self.hand[index])
                 card_to_play.append(self.hand[index + 1])
                 card_to_play.append(self.hand[index + 2])
-                self.remove_from_hand(self.hand[index + 2]) #on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                # on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                self.remove_from_hand(self.hand[index + 2])
                 self.remove_from_hand(self.hand[index + 1])
                 self.remove_from_hand(self.hand[index])
                 return card_to_play
@@ -333,13 +345,14 @@ class AIPlayer(Player):
         index = 0
         card_to_play = []
         while index + 3 < len(self.hand):
-            if self.hand[index] == self.hand[index + 1] == self.hand[index + 2] == self.hand[index + 3] \
-                    and self.hand[index] > last_cards_play[0]:
+            if self.hand[index] == self.hand[index + 1] == self.hand[index + 2] == \
+                    self.hand[index + 3] and self.hand[index] > last_cards_play[0]:
                 card_to_play.append(self.hand[index])
                 card_to_play.append(self.hand[index + 1])
                 card_to_play.append(self.hand[index + 2])
                 card_to_play.append(self.hand[index + 3])
-                self.remove_from_hand(self.hand[index + 3])  # on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                # on remove les cartes en ordre décroissant pour éviter les probleme d'index.
+                self.remove_from_hand(self.hand[index + 3])
                 self.remove_from_hand(self.hand[index + 2])
                 self.remove_from_hand(self.hand[index + 1])
                 self.remove_from_hand(self.hand[index])
