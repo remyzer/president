@@ -1,6 +1,7 @@
 """
 Ce module contient toutes les classes relatives au jeu du président
 """
+import dataclasses
 import random
 
 colors = ['♠', '♣', '♦', '♥']
@@ -8,6 +9,7 @@ colors = ['♠', '♣', '♦', '♥']
 signs = ['3', '4', '5', '6', '7', '8', '9', '10', 'J', 'Q', 'K', 'A', '2']
 
 
+@dataclasses.dataclass
 class Deck:
     """
     Cette classe gère la distribution et le mélange du deck.
