@@ -59,17 +59,29 @@ class Card:
 
 
 class PresidentGame:
-    #TODO nommage aleatoire des joueurs + nombre de joueur
     def __init__(self, players):
         self.players = players
         self.distribute_cards()
-        next_player = self.find_heart_queen_in_player_hand(self.players)
+        self.next_player = self.find_heart_queen_in_player_hand(self.players)
+        for player in self.players:
+            player.sort_hand_by_value()
 
+    def start(self):
+        while self.number_of_player_with_empty_hand() < len(self.players)-1:
+            next_round = Round(self.next_player, self.players)
+            self.next_player = next_round.start()
 
-    """
-    Distribue équitablement les cartes entre tous les joueurs
-    """
+    def number_of_player_with_empty_hand(self):
+        number_of_player_with_empty_hand = 0
+        for player in self.players:
+            if len(player.hand) == 0:
+                number_of_player_with_empty_hand += 1
+        return number_of_player_with_empty_hand
+
     def distribute_cards(self):
+        """
+        Distribue équitablement les cartes entre tous les joueurs
+        """
         deck = Deck()
         deck.shuffle()
         next_player = 0
@@ -80,12 +92,11 @@ class PresidentGame:
             else:
                 next_player += 1
 
-    """
-    Trouve le joueur avec la dame de coeur dans sa main
-    :parameter List of Players: players
-    """
-
     def find_heart_queen_in_player_hand(self, players):
+        """
+        Trouve le joueur avec la dame de coeur dans sa main
+        :parameter players: List of Players
+        """
         for player in players:
             for card in player.hand:
                 if card.sign == 'Q' and card.color == '♥':
@@ -111,7 +122,6 @@ class Player:
         self.hand.append(card)
 
     def remove_from_hand(self, card: Card):
-
         """
          Retire la carte de la main du joueur
         :param card:  carte à retirer
@@ -146,44 +156,72 @@ class Player:
             hand_string += f"{card.sign}{card.color}|"
         print(hand_string)
 
-    def play(self, hand_index):
+    def play(self, last_cards_play):
         """
-        Retire de la main du joueur les cartes jouées
-        :param hand_index:
+        Demande au player quelle carte jouer
+        :param last_cards_play: listes des dernieres cartes jouées vide si début du pli
         :return: retourne les cartes jouées
         """
-        cards_played = []
-        for index in hand_index:
-            cards_played.append(self.hand[index])
-            self.remove_from_hand(self.hand[index])
-        self.check_if_multiple_cards_are_equals(cards_played)
-        return cards_played
+        cards_to_played = []
+        last_trick = ""
+        for card in last_cards_play:
+            last_trick += "[{x},{y}]".format(x=card.sign, y=card.color)
+        print("Dernière cartes jouées : " + last_trick)
+        self.display_hand()
+        if len(last_cards_play) == 0:
+            number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
+        else:
+            number_of_cards_to_play = len(last_cards_play)
+        for index in range(number_of_cards_to_play):
+            card_to_play = int(input("Quelle carte voulez vous jouer?(index du tableau -1 pour passer)"))
+            if card_to_play == -1:
+                return []
+            else:
+                cards_to_played.append(self.hand[card_to_play])
+        if cards_to_played.count(cards_to_played[0]) == len(cards_to_played): #On vérifie que tous les élément de la liste sont de même valeur
+            if len(last_cards_play) == 0 or cards_to_played[0] >= last_cards_play[0]: #On vérifie que les cartes sélectionner à jouer sont valable en fonction de ce qui a été joué avant
+                for card in cards_to_played:
+                    self.remove_from_hand(card)
+                    self.display_hand()
+                return cards_to_played
+        return []
 
 
 class Round:
-    def __init__(self, current_player, players):
+    def __init__(self, next_player, players):
         self.players = players
-        self.nb_card_to_play = 0 #FIXME a modifier
-        self.current_player_index = 0
-        self.current_player = current_player
-        self.cards_played = []
+        self.next_player = next_player
         self.last_cards_played = []
 
-    def next(self, cards_played):
-        self.last_cards_played = []
-        for card in cards_played:
-            self.cards_played.append(card)
-            self.last_cards_played.append(card)
+    def start(self):
+        number_of_players_to_pass = 0
+        while number_of_players_to_pass <= len(self.players):
+            cards_play = self.next_player.play(self.last_cards_played)
+            if len(cards_play) == 0:
+                number_of_players_to_pass += 1
+            else:
+                number_of_players_to_pass = 0
+                self.last_cards_played = cards_play
+            #if self.last_cards_played[0].value == 12:
+                #break
+            self.next_player = self.find_next_player()
+        return self.next_player
 
-        self.find_next_player()
+
+    #def next(self, cards_played):
+     #   self.last_cards_played = []
+     #   for card in cards_played:
+        #    self.cards_played.append(card)
+           # self.last_cards_played.append(card)
+
+      #  self.find_next_player()
 
     def find_next_player(self):
-        if self.current_player_index == len(self.players-1):
-            self.current_player_index = 0
+        if self.players.index(self.next_player) == len(self.players) - 1:
+            return self.players[0]
         else:
-            self.current_player_index += 1
+            return self.players[self.players.index(self.next_player)+1]
 
-        self.current_player = self.players[self.current_player_index]
 
 class AIPlayer(Player):
 
@@ -206,13 +244,18 @@ class AIPlayer(Player):
                 else:
                     for card in self.hand:
                         if card >= last_cards_play[0]:
-                            return [card]
+                            cards = [card]
+                            self.remove_from_hand(card)
+                            return cards
+                    return []
             case 2:
                 return self.first_pair_playable(last_cards_play)
             case 3:
                 return self.first_triple_playable(last_cards_play)
             case 4:
                 return self.first_four_playable(last_cards_play)
+            case _:
+                return []
 
     def first_pair_playable(self, last_cards_play):
         """
