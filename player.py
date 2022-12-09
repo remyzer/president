@@ -98,4 +98,3 @@ class Player:
         self.display_last_cards_play(last_cards_play)
         self.display_hand()
         print("***************************")
-
