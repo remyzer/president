@@ -37,6 +37,7 @@ Le main permet de gérer les paramètres de la partie : la création des joueurs
 
 ## Explication de l' affichage
 
+Pour lancer le jeu on doit lancer le main.py
 Au lancement de la partie on nous demande le nombre de joueurs,\
 Ensuite on demande le nom du joueur
 Ensuite à chaque round on affiche le nom des joueurs avec l'évolution de leurs cartes
