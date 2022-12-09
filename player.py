@@ -2,6 +2,7 @@
 Module lié au joueur
 """
 from card import Card
+from exception import InvalidNumberOfCardException, InvalidCardToPlayException
 
 
 class Player:
@@ -55,27 +56,49 @@ class Player:
         :param last_cards_play: listes des dernieres cartes jouées vide si début du pli
         :return: retourne les cartes jouées
         """
+        card_to_play = {}
         self.display_game_state(last_cards_play)
-        cards_to_played = []
+        cards_to_play = []
+        number_of_cards_to_play = 0
         if len(last_cards_play) == 0:
-            number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
+            error = "start"
+            while error != "":
+                try:
+                    number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
+                    if number_of_cards_to_play < 1 or number_of_cards_to_play > 4:
+                        raise InvalidNumberOfCardException
+                except InvalidNumberOfCardException:
+                    error = "nombre invalide"
+                    print(error)
+                else:
+                    error = ""
         else:
             number_of_cards_to_play = len(last_cards_play)
         for _ in range(number_of_cards_to_play):
-            card_to_play = \
-                int(input("Quelle carte voulez vous jouer?(index du tableau -1 pour passer)"))
+            error = "start"
+            while error != "":
+                try:
+                    card_to_play = int(input(
+                        "Quelle carte voulez vous jouer?(index du tableau, -1 pour passer)"))
+                    if card_to_play < -1 or card_to_play > len(self.hand)-1:
+                        raise InvalidCardToPlayException
+                except InvalidCardToPlayException:
+                    error = "nombre invalide"
+                    print(error)
+                else:
+                    error = ""
             if card_to_play == -1:
-                return cards_to_played
-            cards_to_played.append(self.hand[card_to_play])
+                return cards_to_play
+            cards_to_play.append(self.hand[card_to_play])
         # On vérifie que tous les élément de la liste sont de même valeur
-        if cards_to_played.count(cards_to_played[0]) == len(cards_to_played):
+        if cards_to_play.count(cards_to_play[0]) == len(cards_to_play):
             # On vérifie que les cartes sélectionner à jouer sont valable
             # en fonction de ce qui a été joué avant
-            if len(last_cards_play) == 0 or cards_to_played[0] >= last_cards_play[0]:
-                for card in cards_to_played:
+            if len(last_cards_play) == 0 or cards_to_play[0] >= last_cards_play[0]:
+                for card in cards_to_play:
                     self.remove_from_hand(card)
-                return cards_to_played
-        return cards_to_played
+                return cards_to_play
+        return cards_to_play
 
     @staticmethod
     def display_last_cards_play(last_cards_play):

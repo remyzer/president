@@ -14,6 +14,7 @@ class PresidentGame:
         self.players = players
         self.distribute_cards()
         self.next_player = self.find_heart_queen_in_player_hand(self.players)
+        #Tri du jeu de chaque joueur
         for player in self.players:
             player.sort_hand_by_value()
 
@@ -22,14 +23,15 @@ class PresidentGame:
         Cette méthode marque le début d'une partie.
         Elle s'arrête lorsqu'il ne reste plus qu'un joueur avec des cartes
         """
+        #Le jeu s'arrête quand il n'y a plus qu'un joueur avec des cartes.
         while self.number_of_player_with_empty_hand() < len(self.players) - 1:
             next_round = Round(self.next_player, self.players)
             self.next_player = next_round.start()
 
     def number_of_player_with_empty_hand(self):
         """
-        Recherche le nombre de joueurs qui ont gagné
-        :return: Le nombre de joueurs qui ont gagné
+        Recherche le nombre de joueurs qui ont vidé leur main
+        :return: Le nombre de joueurs qui ont vidé leur main
         """
         number_of_player_with_empty_hand = 0
         for player in self.players:
