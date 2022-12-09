@@ -97,7 +97,5 @@ class Player:
         print("***************************")
         self.display_last_cards_play(last_cards_play)
         self.display_hand()
-        index_liste = ""
-        for index in range(len(self.hand)):
-            index_liste += f"{index} |"
-        print(index_liste)
+        print("***************************")
+

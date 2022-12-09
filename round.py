@@ -40,6 +40,10 @@ class Round:
         return self.players[self.players.index(self.next_player)+1]
 
     def display_number_of_cards_per_players(self):
+        """
+        Affiche le nombre de cartes de chaque joueur
+        :return:
+        """
         player_list_card = ""
         for player in self.players:
             player_list_card += f"{player.name}:{len(player.hand)} cartes "
