@@ -1,7 +1,8 @@
+
 import unittest
 import names
 
-from AIPlayer import AIPlayer
+from ai_player import AIPlayer
 from deck import Deck
 from player import Player
 from president import PresidentGame

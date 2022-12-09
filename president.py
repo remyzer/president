@@ -1,3 +1,6 @@
+"""
+Module lié au lancement de la partie
+"""
 from deck import Deck
 from round import Round
 

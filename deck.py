@@ -1,3 +1,6 @@
+"""
+Module lié à la création de Deck
+"""
 import dataclasses
 import random
 

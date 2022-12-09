@@ -1,3 +1,6 @@
+"""
+Module lié à l'AIPlayer
+"""
 from player import Player
 
 
@@ -17,6 +20,7 @@ class AIPlayer(Player):
                 card_to_play = []
                 if len(self.hand) != 0:
                     card_to_play = [self.hand[0]]
+                    self.remove_from_hand(self.hand[0])
                 return card_to_play
             case 1:
                 return self.first_card_playable(last_cards_play)

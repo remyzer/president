@@ -1,3 +1,6 @@
+"""
+Module lié au joueur
+"""
 from card import Card
 
 
@@ -37,12 +40,13 @@ class Player:
 
     def display_hand(self):
         """
-        Affiche dans la console la main du joueur
+        Affiche dans la console la main du joueur avec entre parenthèse
+        l'index de la carte dans la main pour faciliter le choix à l'utilisateur
         :return:
         """
         hand_string = ""
-        for card in self.hand:
-            hand_string += f"{card.sign}{card.color}|"
+        for index, card in enumerate(self.hand):
+            hand_string += f"{card.sign}{card.color}({index})|"
         print(hand_string)
 
     def play(self, last_cards_play):
@@ -51,9 +55,8 @@ class Player:
         :param last_cards_play: listes des dernieres cartes jouées vide si début du pli
         :return: retourne les cartes jouées
         """
+        self.display_game_state(last_cards_play)
         cards_to_played = []
-        self.display_last_cards_play(last_cards_play)
-        self.display_hand()
         if len(last_cards_play) == 0:
             number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
         else:
@@ -62,7 +65,7 @@ class Player:
             card_to_play = \
                 int(input("Quelle carte voulez vous jouer?(index du tableau -1 pour passer)"))
             if card_to_play == -1:
-                return []
+                return cards_to_played
             cards_to_played.append(self.hand[card_to_play])
         # On vérifie que tous les élément de la liste sont de même valeur
         if cards_to_played.count(cards_to_played[0]) == len(cards_to_played):
@@ -72,7 +75,7 @@ class Player:
                 for card in cards_to_played:
                     self.remove_from_hand(card)
                 return cards_to_played
-        return []
+        return cards_to_played
 
     @staticmethod
     def display_last_cards_play(last_cards_play):
@@ -84,3 +87,17 @@ class Player:
         for card in last_cards_play:
             last_trick += f"[{card.sign},{card.color}]"
         print("Dernière cartes jouées : " + last_trick)
+
+    def display_game_state(self, last_cards_play):
+        """
+        Affiche l'état du tour dernière cartes jouer et main du joueur
+        :param last_cards_play: les cartes jouer par le précedent joueur
+        :return: Affichage
+        """
+        print("***************************")
+        self.display_last_cards_play(last_cards_play)
+        self.display_hand()
+        index_liste = ""
+        for index in range(len(self.hand)):
+            index_liste += f"{index} |"
+        print(index_liste)

@@ -2,7 +2,7 @@
 
 Le président (aussi appelé le troufion) est un jeu de cartes rapide et amusant, au cours duquel la hiérarchie des joueurs changera à chaque manche. Le vainqueur d'une manche devient le président, alors que le perdant est proclamé troufion. Une fois que vous maitriserez les règles de base, vous pourrez essayer différentes variantes de ce jeu très populaire.
 
-##Règles du jeu :
+## Règles du jeu :
 
 Ce jeu se joue de 3 à 6 joueurs.
 Lors du premier tour, le joueur possédant la dame de coeur commence.
@@ -17,4 +17,6 @@ Les joueurs restants continuent à jouer jusqu'à ce qu'il n'y ait plus qu'une j
 
 On décide alors ou non de jouer une nouvelle manche. Ce sera le troufion qui ouvrira la partie.
 
-###Déroulement de la partie
+### Organisation du code
+
+### Explication de l' affichage
