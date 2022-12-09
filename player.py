@@ -2,7 +2,6 @@
 Module lié au joueur
 """
 from card import Card
-from exception import InvalidNumberOfCardException, InvalidCardToPlayException
 
 
 class Player:
@@ -66,8 +65,8 @@ class Player:
                 try:
                     number_of_cards_to_play = int(input("Combien de Cartes voulez vous jouer?"))
                     if number_of_cards_to_play < 1 or number_of_cards_to_play > 4:
-                        raise InvalidNumberOfCardException
-                except InvalidNumberOfCardException:
+                        raise Exception
+                except Exception:
                     error = "nombre invalide"
                     print(error)
                 else:
@@ -81,8 +80,8 @@ class Player:
                     card_to_play = int(input(
                         "Quelle carte voulez vous jouer?(index du tableau, -1 pour passer)"))
                     if card_to_play < -1 or card_to_play > len(self.hand)-1:
-                        raise InvalidCardToPlayException
-                except InvalidCardToPlayException:
+                        raise Exception
+                except Exception:
                     error = "nombre invalide"
                     print(error)
                 else:

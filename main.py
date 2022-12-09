@@ -4,7 +4,6 @@ Module parametrant le lancement de la partie
 import names
 
 from ai_player import AIPlayer
-from exception import InvalidNumberOfPlayerError
 from president import PresidentGame
 from player import Player
 
@@ -18,8 +17,8 @@ if __name__ == '__main__':
         try:
             nb_player = int(input('Entrez un nombre de joueurs: (entre 3 et 6)'))
             if nb_player < 3 or nb_player > 6:
-                raise InvalidNumberOfPlayerError
-        except InvalidNumberOfPlayerError:
+                raise Exception
+        except Exception:
             error = "nombre de player invalide"
             print(error)
         else:
